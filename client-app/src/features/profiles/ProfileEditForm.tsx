@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Form as FinalForm, Field } from "react-final-form";
 import TextInput from "../../app/common/form/TextInput";
 import { RootStoreContext } from "../../app/stores/rootStore";
-import { Form, Button, TextArea } from "semantic-ui-react";
+import { Form, Button } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import {
   ProfileFormValues,

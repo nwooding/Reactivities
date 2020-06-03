@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Header, Tab, Grid, Button } from "semantic-ui-react";
-import { IProfile } from "../../app/models/profile";
 import { RootStoreContext } from "../../app/stores/rootStore";
 import ProfileEditForm from "./ProfileEditForm";
 import LoadingComponent from "../../app/layout/LoadingComponent";
