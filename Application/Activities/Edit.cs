@@ -25,7 +25,7 @@ namespace Application.Activities
 
             public string Venue { get; set; }
         }
-            public class CommandValidator : AbstractValidator<Command>
+        public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
@@ -51,8 +51,8 @@ namespace Application.Activities
                 var activity = await _context.Activities.FindAsync(request.Id);
 
 
-                if(activity == null)
-                    throw new RestException(HttpStatusCode.NotFound, new {activity= "Not found"});
+                if (activity == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { activity = "Not found" });
 
                 activity.Title = request.Title ?? activity.Title;
                 activity.Description = request.Description ?? activity.Description;
@@ -60,7 +60,7 @@ namespace Application.Activities
                 activity.Category = request.Category ?? activity.Category;
                 activity.Date = request.Date ?? activity.Date;
                 activity.Venue = request.Venue ?? activity.Venue;
-        
+
                 var success = await _context.SaveChangesAsync() > 0;
 
                 if (success) return Unit.Value;

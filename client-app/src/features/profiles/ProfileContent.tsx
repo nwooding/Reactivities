@@ -1,9 +1,12 @@
 import React from "react";
 import { Tab } from "semantic-ui-react";
 import ProfilePhotos from "./ProfilePhotos";
+import ProfileDescription from "./ProfileDescription";
+import { IProfile } from "../../app/models/profile";
 
-const panes = [
-  { menuItem: "About", render: () => <Tab.Pane>About content</Tab.Pane> },
+
+  const panes = [
+  { menuItem: "About", render: () => <ProfileDescription /> },
   { menuItem: "Photos", render: () => <ProfilePhotos /> },
   {
     menuItem: "Activities",
@@ -20,12 +23,14 @@ const panes = [
 ];
 
 export const ProfileContent = () => {
+
+
   return (
     <Tab
       menu={{ fluid: true, vertical: true }}
       menuPosition={"right"}
       panes={panes}
-      activeIndex={1}
+     
     />
   );
 };

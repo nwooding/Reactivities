@@ -1,5 +1,5 @@
 import { RootStore } from "./rootStore";
-import { IProfile, IPhoto } from "../models/profile";
+import { IProfile, IPhoto, IProfileFormValues } from "../models/profile";
 import { observable, action, runInAction, computed } from "mobx";
 import agent from "../api/agent";
 import { toast } from "react-toastify";
@@ -12,6 +12,7 @@ export default class ProfileStore {
 
   @observable profile: IProfile | null = null;
   @observable loadingProfile = true;
+  @observable updatingProfile = false;
   @observable uploadingPhoto = false;
   @observable loading = false;
 
@@ -39,6 +40,29 @@ export default class ProfileStore {
     }
   };
 
+  @action editProfile = async (profile: IProfileFormValues) => {
+    this.updatingProfile = true;
+    try {
+      await agent.Profiles.edit(profile);
+      runInAction(() => {
+        if (this.profile) {
+          this.profile.displayName = profile.displayName;
+          this.profile.bio = profile.bio;
+        }
+        if (this.isCurrentUser && this.rootStore.userStore.user) {
+          this.rootStore.userStore.user.displayName = profile.displayName;
+        }
+
+        this.updatingProfile = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.updatingProfile = false;
+      });
+    }
+  };
+
   @action uploadPhoto = async (file: Blob) => {
     this.uploadingPhoto = true;
     try {
@@ -47,53 +71,55 @@ export default class ProfileStore {
         if (this.profile) {
           this.profile.photos.push(photo);
           if (photo.isMain && this.rootStore.userStore.user) {
-              this.rootStore.userStore.user.image = photo.url;
-              this.profile.image = photo.url;
+            this.rootStore.userStore.user.image = photo.url;
+            this.profile.image = photo.url;
           }
         }
         this.uploadingPhoto = false;
       });
     } catch (error) {
-        console.log(error);
-        toast.error('Problem uploading photo');
-        runInAction(() => {
-            this.uploadingPhoto = false;
-        })
+      console.log(error);
+      toast.error("Problem uploading photo");
+      runInAction(() => {
+        this.uploadingPhoto = false;
+      });
     }
   };
 
   @action setMainPhoto = async (photo: IPhoto) => {
     this.loading = true;
     try {
-        await agent.Profiles.setMainPhoto(photo.id);
-        runInAction(() => {
-          this.rootStore.userStore.user!.image = photo.url;
-          this.profile!.photos.find(a => a.isMain)!.isMain = false;
-          this.profile!.photos.find(a => a.id === photo.id)!.isMain = true;
-          this.profile!.image = photo.url;
-          this.loading = false;
-        })
+      await agent.Profiles.setMainPhoto(photo.id);
+      runInAction(() => {
+        this.rootStore.userStore.user!.image = photo.url;
+        this.profile!.photos.find((a) => a.isMain)!.isMain = false;
+        this.profile!.photos.find((a) => a.id === photo.id)!.isMain = true;
+        this.profile!.image = photo.url;
+        this.loading = false;
+      });
     } catch (error) {
-        toast.error('Problem setting photo as main');
-        runInAction(() => {
-          this.loading = false;
-        })
+      toast.error("Problem setting photo as main");
+      runInAction(() => {
+        this.loading = false;
+      });
     }
-  }
+  };
 
   @action deletePhoto = async (photo: IPhoto) => {
     this.loading = true;
     try {
       await agent.Profiles.deletePhoto(photo.id);
-      runInAction(()=> {
-        this.profile!.photos = this.profile!.photos.filter(a => a.id !== photo.id);
+      runInAction(() => {
+        this.profile!.photos = this.profile!.photos.filter(
+          (a) => a.id !== photo.id
+        );
         this.loading = false;
-      })
+      });
     } catch (error) {
-        toast.error('Problem deleting the photo');
-        runInAction(()=>{
-          this.loading = false;
-        })
+      toast.error("Problem deleting the photo");
+      runInAction(() => {
+        this.loading = false;
+      });
     }
-  }
+  };
 }
