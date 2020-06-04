@@ -2,6 +2,7 @@ import React from "react";
 import { Tab } from "semantic-ui-react";
 import ProfilePhotos from "./ProfilePhotos";
 import ProfileDescription from "./ProfileDescription";
+import ProfileFollowings from "./ProfileFollowings";
 
 
   const panes = [
@@ -13,15 +14,19 @@ import ProfileDescription from "./ProfileDescription";
   },
   {
     menuItem: "Followers",
-    render: () => <Tab.Pane>Follower content</Tab.Pane>,
+    render: () => <ProfileFollowings />,
   },
   {
     menuItem: "Following",
-    render: () => <Tab.Pane>Following content</Tab.Pane>,
+    render: () => <ProfileFollowings />,
   },
 ];
 
-export const ProfileContent = () => {
+interface IProps {
+  setActiveTab: (activeIndex: any) => void
+}
+
+export const ProfileContent: React.FC<IProps> = ({setActiveTab}) => {
 
 
   return (
@@ -29,7 +34,7 @@ export const ProfileContent = () => {
       menu={{ fluid: true, vertical: true }}
       menuPosition={"right"}
       panes={panes}
-     
+     onTabChange={(e, data) => setActiveTab(data.activeIndex)}
     />
   );
 };
