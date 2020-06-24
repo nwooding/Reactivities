@@ -45,6 +45,28 @@ namespace Persistence
                 }
             }
 
+
+            if (!context.Characters.Any())
+            {
+                var characters = new List<Character> 
+                {
+                    new Character
+                    {
+                        Name="BillyBob",
+                        Class="Wizard",
+                        Level=5,
+                        Strength=10,
+                        Dexterity=12,
+                        Constitution=14,
+                        Intelligence=18,
+                        Wisdom=10,
+                        Charisma=8
+                    }
+                };
+
+                await context.Characters.AddRangeAsync(characters);
+                await context.SaveChangesAsync();
+            }
             if (!context.Activities.Any())
             {
                 var activities = new List<Activity>

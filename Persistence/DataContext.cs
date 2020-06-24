@@ -19,6 +19,8 @@ namespace Persistence
 
         public DbSet<UserFollowing> Followings { get; set; }
 
+        public DbSet<Character> Characters { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)
